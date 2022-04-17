@@ -94,9 +94,11 @@ class AlienInvasion:
             game_over = pygame.font.Font("fonts/ARCADECLASSIC.TTF", 90).render('GAME OVER', True, (200, 200, 200))
             high_score = pygame.font.Font("fonts/ARCADECLASSIC.TTF", 50).render('high score', True, (200, 200, 200))
             total_score = pygame.font.Font("fonts/ARCADECLASSIC.TTF", 50).render(f'{"0"*(8-len(str(self.score_count)))}{self.score_count}', True, (200, 200, 200))
+            restart = pygame.font.Font("fonts/ARCADECLASSIC.TTF", 30).render('press R to restart or Esc to exit', True, (200, 200, 200))
             self.screen.blit(game_over, (415, 300))
             self.screen.blit(high_score, (495, 400))
             self.screen.blit(total_score, (510, 450))
+            self.screen.blit(restart, (410, 550))
             self.stats.game_active = False
 
     def lives_left(self):
@@ -167,6 +169,11 @@ class AlienInvasion:
             pygame.mixer.music.play(10)
         elif event.key == pygame.K_SPACE and self.stats.game_active == False:
             self.stats.game_active = True
+        elif event.key == pygame.K_r and self.stats.ship_left == 0:
+            if int(self.high) < self.score_count:
+                with open('High_score.txt', 'w+') as f:
+                    f.write(f'{self.score_count}')
+            self.reset()
 
     def score(self):
         text_surface = self.settings.my_font.render(
@@ -217,7 +224,7 @@ class AlienInvasion:
             bullet.draw_bullets()
         self.aliens.draw(self.screen)
         self.ships.draw(self.screen)
-        if not self.stats.game_active and self.score_count == 0:
+        if not self.stats.game_active and self.stats.ship_left != 0:
             self.play_button.draw_button()
         if self.stats.ship_left == 0:
             self.game_over()
@@ -252,6 +259,9 @@ class AlienInvasion:
             # Происходит то же, что при столкновении с кораблем.
                 self._ship_hit()
                 break
+
+    def reset(self):
+        self.__init__()
 
     def run_game(self):
         """Запуск основного цикла игры."""

@@ -22,7 +22,7 @@ class Settings:
         pygame.font.init()
         self.my_font = pygame.font.Font("fonts/ARCADECLASSIC.TTF", 30)
         #Настройки пришельцев
-        self.alien_speed = 3
+        self.alien_speed = 300
         self.fleet_drop_speed = 20
         self.alien_acceleration = 1
         # fleet_direction = 1 обозначает движение вправо; а -1 - влево.
